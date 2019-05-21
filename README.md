@@ -6,7 +6,7 @@ Este proyecto se conecta a la SBIF para mostrar el precio del dolar en rango de 
 
 Se debe configurar la API Key que proporciona el SBIF, para solicitar una puede hacerlo ingresando al siguiente [link](https://api.sbif.cl/uso-de-api-key.html)
 
-Luego se ha de crear un archivo llamado `environment.js` dentro de la carpeta `src` con la siguiete estructura
+Luego se ha de crear un archivo llamado `environment.js` dentro de la carpeta `src` con la siguiente estructura
 
 ```js
 export const development = {

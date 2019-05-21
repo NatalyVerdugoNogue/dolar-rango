@@ -47,7 +47,7 @@ class DollarRange extends Component {
 
     if (endDate >= starDate) {
       const { API_KEY } = env[process.env.NODE_ENV];
-      const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${starDate.getFullYear()}/${starDate.getMonth()}/dias_i/${starDate.getDate()}/${endDate.getFullYear()}/${endDate.getMonth()}/dias_f/${endDate.getDate()}?apikey=${API_KEY}&formato=json`;
+      const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${starDate.getFullYear()}/${starDate.getMonth() + 1}/dias_i/${starDate.getDate()}/${endDate.getFullYear()}/${endDate.getMonth() + 1}/dias_f/${endDate.getDate()}?apikey=${API_KEY}&formato=json`;
 
       try {
         const responseDollarRange = await fetch(url_range);
@@ -102,6 +102,7 @@ class DollarRange extends Component {
           <Row className='dollarRangeRow'>
             <Col m={4} offset={'m2'} s={6}>
               <DatePicker
+                className='dollarRangeColor'
                 placeholder="Fecha inicio:"
                 options={this.options}
                 onChange={(starDate) => {
@@ -115,6 +116,7 @@ class DollarRange extends Component {
 
             <Col m={4} offset={'m2'} s={6}>
               <DatePicker
+                className='dollarRangeColor'
                 placeholder="Fecha termino:"
                 options={this.options}
                 onChange={(endDate) => {

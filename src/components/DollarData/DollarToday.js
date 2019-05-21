@@ -11,7 +11,7 @@ class DollarToday extends Component {
     // obtención de fecha actual
     this.today = new Date()
     this.dateToday = this.today.getDate();
-    this.monthToday = this.today.getMonth();
+    this.monthToday = this.today.getMonth() + 1;
     this.yearToday = this.today.getFullYear();
     this.dayToday = this.today.getDay();
 
