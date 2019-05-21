@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Col, Table } from 'react-materialize';
 
+import * as env from '../../enviroment';
+
 class DollarToday extends Component {
 
   constructor() {
@@ -33,10 +35,12 @@ class DollarToday extends Component {
 
   // fetch a sbif dollar de día especifico
   async getDollarToday() {
-    const url_today = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/${this.yearToday}/${this.monthToday}/dias/${this.dateToday}?apikey=9c84db4d447c80c74961a72245371245cb7ac15f&formato=json`
-    const responseDollarToday = await fetch(url_today);
-    const dollarToday = await responseDollarToday.json();
+    const { API_KEY } = env[process.env.NODE_ENV];
+    const url_today = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/${this.yearToday}/${this.monthToday}/dias/${this.dateToday}?apikey=${API_KEY}&formato=json`
+
     try {
+      const responseDollarToday = await fetch(url_today);
+      const dollarToday = await responseDollarToday.json();
       this.setState({ Valor: dollarToday.Dolares[0].Valor })
     }
     catch{
@@ -55,7 +59,7 @@ class DollarToday extends Component {
                 {Fecha}
               </td>
               <td>
-                {Valor}
+                {Number(Valor) ? `$ ${Valor}` : Valor}
               </td>
             </tr>
           </tbody>

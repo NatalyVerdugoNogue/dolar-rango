@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col, DatePicker } from 'react-materialize';
 
+import * as env from '../../../enviroment';
+
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";
 
@@ -44,20 +46,26 @@ class DollarRange extends Component {
     const { starDate, endDate } = this.state;
 
     if (endDate >= starDate) {
-      const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${starDate.getFullYear()}/${starDate.getMonth()}/dias_i/${starDate.getDate()}/${endDate.getFullYear()}/${endDate.getMonth()}/dias_f/${endDate.getDate()}?apikey=9c84db4d447c80c74961a72245371245cb7ac15f&formato=json`;
+      const { API_KEY } = env[process.env.NODE_ENV];
+      const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${starDate.getFullYear()}/${starDate.getMonth()}/dias_i/${starDate.getDate()}/${endDate.getFullYear()}/${endDate.getMonth()}/dias_f/${endDate.getDate()}?apikey=${API_KEY}&formato=json`;
 
-      const responseDollarRange = await fetch(url_range);
-      const dollarRange = await responseDollarRange.json();
+      try {
+        const responseDollarRange = await fetch(url_range);
+        const dollarRange = await responseDollarRange.json();
 
-      const dollarValues = (dollarRange.Dolares).map(elem => parseFloat(elem.Valor.replace(',', '.')));
-      this.getAverageValue(dollarValues);
-      this.getMaxMinValue(dollarValues);
-      this.changeValueToData(dollarRange.Dolares);
+        const dollarValues = (dollarRange.Dolares).map(elem => parseFloat(elem.Valor.replace(',', '.')));
+        this.getAverageValue(dollarValues);
+        this.getMaxMinValue(dollarValues);
+        this.changeValueToData(dollarRange.Dolares);
+      }
+      catch{
+        this.setState({ average: 'sin valor disponible', maxValue: 'sin valor disponible', minValue: 'sin valor disponible' })
+        alert(('Falla en obtención de datos'))
+      }
+
     } else {
       alert(('La fecha de termino debe ser menor a la de inicio'))
     }
-
-
   };
 
   // obtengo valor promedio
@@ -124,7 +132,7 @@ class DollarRange extends Component {
           <ValueRange average={average} maxValue={maxValue} minValue={minValue}></ValueRange>
         </Col>
 
-        <Col m={6} offset={'m1'} s={12} className='dollarGraphInt'>
+        <Col m={5} offset={'m1'} s={12} className='dollarGraphInt'>
           <DollarGraph dataGraph={dataGraph} ></DollarGraph>
         </Col>
       </Row>

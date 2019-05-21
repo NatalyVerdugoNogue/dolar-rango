@@ -9,7 +9,7 @@ const ValueRange = ({ average, maxValue, minValue }) => (
           Valor Promedio
           </td>
         <td>
-          {average}
+          {Number(average) ? `$ ${average}` : average}
         </td>
       </tr>
       <tr>
@@ -17,7 +17,7 @@ const ValueRange = ({ average, maxValue, minValue }) => (
           Valor Máximo
           </td>
         <td>
-          {maxValue}
+          {Number(maxValue) ? `$ ${maxValue}` : maxValue}
         </td>
       </tr>
       <tr>
@@ -25,7 +25,7 @@ const ValueRange = ({ average, maxValue, minValue }) => (
           Valor Mínimo
           </td>
         <td>
-          {minValue}
+          {Number(minValue) ? `$ ${minValue}` : minValue}
         </td>
       </tr>
     </tbody>
