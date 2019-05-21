@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, DatePicker } from 'react-materialize';
 
-import * as env from '../../../enviroment';
+import * as env from '../../../environment';
 
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";

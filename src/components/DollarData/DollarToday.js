@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Table } from 'react-materialize';
 
-import * as env from '../../enviroment';
+import * as env from '../../environment'
 
 class DollarToday extends Component {
 
