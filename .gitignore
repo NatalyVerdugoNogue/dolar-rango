@@ -13,7 +13,7 @@
 
 # misc
 .DS_Store
-.src/enviroment.js
+./src/enviroment.js
 
 npm-debug.log*
 yarn-debug.log*
