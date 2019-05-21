@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col, DatePicker } from 'react-materialize';
+import { Row, Col } from 'react-materialize';
 
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";
 
 import ValueRange from './ValueRange'
 import DollarGraph from './DollarGraph';
+import DateValue from './DateValue'
 
 
 class DollarRange extends Component {
@@ -34,6 +35,9 @@ class DollarRange extends Component {
       maxValue: null,
       minValue: null,
       dataGraph: [],
+      optionsStart: {...this.options},
+      optionsEnd: {...this.options, minDate: null},
+      minDate:null
     }
   }
 
@@ -76,10 +80,28 @@ class DollarRange extends Component {
 
 
   render() {
-    const { average, maxValue, minValue, dataGraph } = this.state;
+    const { average, maxValue, minValue, dataGraph, optionsStart, optionsEnd } = this.state;
     return (
       <Row>
         <Col l={6}>
+          <DateValue 
+          title={"Fecha inicio:"} 
+          options={optionsStart} 
+          onChange={(value => {
+            console.log('value:', value);
+            this.setState({optionsEnd: {...optionsEnd, minDate: value}});
+            this.setState({minDate: value});
+          })}>
+          </DateValue>
+        </Col>
+        <Col l={6}>
+          <DateValue 
+          title={"Fecha termino:"} 
+          options={this.state.optionsEnd}
+          minDate={this.state.minDate}>
+          </DateValue>
+        </Col>
+        {/* <Col l={6}>
           <DatePicker
             placeholder="Fecha inicio:"
             options={this.options}
@@ -104,7 +126,7 @@ class DollarRange extends Component {
               }
             }}
           />
-        </Col>
+        </Col> */}
         <Col l={8} margin-left='auto'>
           <ValueRange average={average} maxValue={maxValue} minValue={minValue}></ValueRange>
         </Col>
