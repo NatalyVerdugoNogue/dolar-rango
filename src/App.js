@@ -1,6 +1,6 @@
 import React from 'react';
 import DollarData from './components/DollarData'
-import './App.css';
+
 
 function App() {
   return (

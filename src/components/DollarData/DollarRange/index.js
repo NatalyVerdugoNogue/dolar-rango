@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, DatePicker } from 'react-materialize';
 
 import "materialize-css/dist/css/materialize.min.css";
 import "materialize-css/dist/js/materialize.min.js";
 
 import ValueRange from './ValueRange'
 import DollarGraph from './DollarGraph';
-import DateValue from './DateValue'
 
 
 class DollarRange extends Component {
@@ -26,7 +25,7 @@ class DollarRange extends Component {
         weekdaysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
         weekdaysAbbrev: ["D", "L", "M", "M", "J", "V", "S"]
       }
-    }
+    };
 
     this.state = {
       starDate: null,
@@ -34,110 +33,104 @@ class DollarRange extends Component {
       average: null,
       maxValue: null,
       minValue: null,
-      dataGraph: [],
-      optionsStart: {...this.options},
-      optionsEnd: {...this.options, minDate: null},
-      minDate:null
-    }
-  }
+      dataGraph: []
+    };
+  };
 
 
   // fetch a sbif dollar de rango de dias
   async getDollarRange() {
-    const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${this.state.starDate.getFullYear()}/${this.state.starDate.getMonth()}/dias_i/${this.state.starDate.getDate()}/${this.state.endDate.getFullYear()}/${this.state.endDate.getMonth()}/dias_f/${this.state.endDate.getDate()}?apikey=9c84db4d447c80c74961a72245371245cb7ac15f&formato=json`
 
-    const responseDollarRange = await fetch(url_range);
-    const dollarRange = await responseDollarRange.json();
+    const { starDate, endDate } = this.state;
 
-    const dollarValues = (dollarRange.Dolares).map(elem => parseFloat(elem.Valor.replace(',', '.')));
-    this.getAverageValue(dollarValues);
-    this.getMaxMinValue(dollarValues);
-    this.changeValueToData(dollarRange.Dolares);
+    if (endDate >= starDate) {
+      const url_range = `https://api.sbif.cl/api-sbifv3/recursos_api/dolar/periodo/${starDate.getFullYear()}/${starDate.getMonth()}/dias_i/${starDate.getDate()}/${endDate.getFullYear()}/${endDate.getMonth()}/dias_f/${endDate.getDate()}?apikey=9c84db4d447c80c74961a72245371245cb7ac15f&formato=json`;
+
+      const responseDollarRange = await fetch(url_range);
+      const dollarRange = await responseDollarRange.json();
+
+      const dollarValues = (dollarRange.Dolares).map(elem => parseFloat(elem.Valor.replace(',', '.')));
+      this.getAverageValue(dollarValues);
+      this.getMaxMinValue(dollarValues);
+      this.changeValueToData(dollarRange.Dolares);
+    } else {
+      alert(('La fecha de termino debe ser menor a la de inicio'))
+    }
+
+
   };
 
-  // obtengo valore promedio
+  // obtengo valor promedio
   getAverageValue = (Dolares) => {
     const amount = Dolares.length;
     const sumValues = Dolares.reduce((a, b) => { return a + b });
-    const average = (sumValues / amount).toFixed(2)
-    this.setState({ average })
-  }
+    const average = (sumValues / amount).toFixed(2);
+    this.setState({ average });
+  };
 
   // obtengo valor maximo y minimo
   getMaxMinValue = (Dolares) => {
     const maxValue = Math.max(...Dolares);
     const minValue = Math.min(...Dolares);
     this.setState({ maxValue });
-    this.setState({ minValue })
-  }
+    this.setState({ minValue });
+  };
 
+  // cambio formato del objeto para darlo a los graficos
   changeValueToData = (Dolares) => {
     var options = { year: '2-digit', month: '2-digit', day: '2-digit' };
-    const dataGraph = Dolares.map(elem => { return { 'Valor': (parseFloat(elem.Valor.replace(',', '.'))), 'Fecha': (new Date(elem.Fecha.replace(/-/g, ','))).toLocaleDateString('es-CL', options) } })
-    this.setState({ dataGraph })
-  }
-
+    const dataGraph = Dolares.map(elem => { return { 'Valor': (parseFloat(elem.Valor.replace(',', '.'))), 'Fecha': (new Date(elem.Fecha.replace(/-/g, ','))).toLocaleDateString('es-CL', options) } });
+    this.setState({ dataGraph });
+  };
 
 
   render() {
-    const { average, maxValue, minValue, dataGraph, optionsStart, optionsEnd } = this.state;
+    const { average, maxValue, minValue, dataGraph } = this.state;
+
     return (
       <Row>
-        <Col l={6}>
-          <DateValue 
-          title={"Fecha inicio:"} 
-          options={optionsStart} 
-          onChange={(value => {
-            console.log('value:', value);
-            this.setState({optionsEnd: {...optionsEnd, minDate: value}});
-            this.setState({minDate: value});
-          })}>
-          </DateValue>
-        </Col>
-        <Col l={6}>
-          <DateValue 
-          title={"Fecha termino:"} 
-          options={this.state.optionsEnd}
-          minDate={this.state.minDate}>
-          </DateValue>
-        </Col>
-        {/* <Col l={6}>
-          <DatePicker
-            placeholder="Fecha inicio:"
-            options={this.options}
-            onChange={(starDate) => {
-              this.setState({ starDate });
-              this.options.minDate = this.state.starDate;
-              if (this.state.starDate && this.state.endDate) {
-                this.getDollarRange()
-              }
-            }}
-          />
+
+        <Col m={12} s={12} className='dollarRangeInt'>
+          <Row className='dollarRangeRow'>
+            <Col m={4} offset={'m2'} s={6}>
+              <DatePicker
+                placeholder="Fecha inicio:"
+                options={this.options}
+                onChange={(starDate) => {
+                  this.setState({ starDate });
+                  if (this.state.starDate && this.state.endDate) {
+                    this.getDollarRange()
+                  }
+                }}
+              />
+            </Col>
+
+            <Col m={4} offset={'m2'} s={6}>
+              <DatePicker
+                placeholder="Fecha termino:"
+                options={this.options}
+                onChange={(endDate) => {
+                  this.setState({ endDate });
+                  if (this.state.starDate && this.state.endDate) {
+                    this.getDollarRange()
+                  };
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
 
-        <Col l={6}>
-          <DatePicker
-            placeholder="Fecha termino:"
-            options={this.options}
-            onChange={(endDate) => {
-              this.setState({ endDate });
-              if (this.state.starDate && this.state.endDate) {
-                this.getDollarRange()
-              }
-            }}
-          />
-        </Col> */}
-        <Col l={8} margin-left='auto'>
+        <Col m={4} offset={'m1'} s={12} className='valueRangeInt'>
           <ValueRange average={average} maxValue={maxValue} minValue={minValue}></ValueRange>
         </Col>
 
-        <Col l={8} margin-left='auto'>
+        <Col m={6} offset={'m1'} s={12} className='dollarGraphInt'>
           <DollarGraph dataGraph={dataGraph} ></DollarGraph>
         </Col>
       </Row>
-    )
-  }
-}
+    );
+  };
+};
 
 
-export default DollarRange
+export default DollarRange;

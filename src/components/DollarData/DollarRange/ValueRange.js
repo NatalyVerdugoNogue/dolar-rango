@@ -2,10 +2,10 @@ import React from 'react';
 import { Table } from 'react-materialize';
 
 const ValueRange = ({ average, maxValue, minValue }) => (
-  <Table>
+  <Table className="valueRangeCon">
     <tbody>
       <tr>
-        <td>
+        <td className="tdValue">
           Valor Promedio
           </td>
         <td>
@@ -13,7 +13,7 @@ const ValueRange = ({ average, maxValue, minValue }) => (
         </td>
       </tr>
       <tr>
-        <td>
+        <td className="tdValue">
           Valor Máximo
           </td>
         <td>
@@ -21,7 +21,7 @@ const ValueRange = ({ average, maxValue, minValue }) => (
         </td>
       </tr>
       <tr>
-        <td>
+        <td className="tdValue">
           Valor Mínimo
           </td>
         <td>
@@ -29,7 +29,8 @@ const ValueRange = ({ average, maxValue, minValue }) => (
         </td>
       </tr>
     </tbody>
-  </Table>)
+  </Table>
+);
 
 
 

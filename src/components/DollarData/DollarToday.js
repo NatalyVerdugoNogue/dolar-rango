@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Col, Table } from 'react-materialize';
 
 class DollarToday extends Component {
 
@@ -46,14 +47,20 @@ class DollarToday extends Component {
   render() {
     const { Valor, Fecha } = this.state
     return (
-      <div>
-        <span>
-          {Fecha}
-        </span>
-        <span>
-          {Valor}
-        </span>
-      </div>
+      <Col m={4} offset={'m4'} s={12} >
+        <Table centered>
+          <tbody>
+            <tr>
+              <td>
+                {Fecha}
+              </td>
+              <td>
+                {Valor}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </Col>
     );
   };
 
